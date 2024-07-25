@@ -13,9 +13,9 @@ def parseOperations(operation, output):
     }
 
     jump_functions = {
-        "eq": "==",
-        "gt": "",
-        "lt": "",
+        "eq": "JEQ",
+        "gt": "JGT",
+        "lt": "JLT",
     }
 
     if operation in two_argument_functions.keys():
@@ -34,7 +34,37 @@ def parseOperations(operation, output):
         output.append(f"M={one_argument_functions[operation]}D")
 
     if operation in jump_functions.keys():
-        
+        output.append("@SP")
+        output.append("M=M-1")
+        output.append("A=M")
+        output.append("D=M")
+
+        output.append("@SP")
+        output.append("M=M-1")
+        output.append("A=M")
+        output.append("D=M")
+        output.append("@evaluate")
+        output.append(f"D;{jump_functions[operation]}")
+
+        output.append("@0")
+        output.append("D=A")
+        output.append("@SP")
+        output.append("A=M")
+        output.append("M=D")
+        output.append("@increment")
+        output.append("0;JMP")
+
+        output.append("(EVALUATE)")
+        output.append("@0")
+        output.append("D=!A")
+        output.append("@SP")
+        output.append("A=M")
+        output.append("M=D")
+
+        output.append("(INCREMENT)")
+        output.append("@SP")
+        output.append("M=M+1")
+
 def parsePushPop(args, output):
     return
 
