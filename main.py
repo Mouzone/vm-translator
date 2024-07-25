@@ -27,8 +27,14 @@ def parseOperations(operation, output):
         output.append("A=M")
         output.append(f"A=M${two_argument_functions[operation]}D")
 
+    if operation in one_argument_functions.keys():
+        output.append("@SP")
+        output.append("A=M-1")
+        output.append("D=M")
+        output.append(f"M={one_argument_functions[operation]}D")
 
-
+    if operation in jump_functions.keys():
+        
 def parsePushPop(args, output):
     return
 
@@ -63,6 +69,9 @@ def parseFile():
 
     printOutput(output, file_name)
 
+
 def printOutput(output, file_name):
+    return
+
 
 parseFile()
