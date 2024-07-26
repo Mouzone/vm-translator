@@ -99,6 +99,41 @@ def parsePushPop(args, output, filename):
         output.append("@SP")
         output.append("M=M+1")
     else:
+        output.append("@SP")
+        output.append("M=M-1")
+        output.append("A=M")
+        output.append("D=M")
+        output.append("@R0")
+        output.append("M=D")
+        if args[1] in standard.keys():
+            output.append(f"{args[2]}")
+            output.append("D=A")
+            output.append(f"{args[1]}")
+            output.append("A=M+D")
+            output.append("D=A")
+            output.append("@R1")
+            output.append("M=D")
+
+            output.append("@R0")
+            output.append("D=M")
+            output.append("@R1")
+            output.append("A=M")
+            output.append("M=D")
+
+        if args[1] == "pointer":
+            output.append("@R0")
+            output.append("D=M")
+            if args[2] == 0:
+                output.append("@3")
+            else:
+                output.append("@4")
+            output.append("M=D")
+
+        if args[1] == "static":
+            output.append("@R0")
+            output.append("D=M")
+            output.append(f"@{filename}.{args[2]}")
+            output.append(f"M=D")
 
 
 def parseLine(line, output, filename):
