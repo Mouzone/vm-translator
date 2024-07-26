@@ -1,4 +1,4 @@
-# translate hack VM language to hack ASM language
+iteration = 0
 def parseOperations(operation, output):
     two_argument_functions = {
         "add": "+",
@@ -43,7 +43,7 @@ def parseOperations(operation, output):
         output.append("M=M-1")
         output.append("A=M")
         output.append("D=M")
-        output.append("@evaluate")
+        output.append(f"@evaluate_{iteration}")
         output.append(f"D;{jump_functions[operation]}")
 
         output.append("@0")
@@ -51,39 +51,62 @@ def parseOperations(operation, output):
         output.append("@SP")
         output.append("A=M")
         output.append("M=D")
-        output.append("@increment")
+        output.append(f"@increment_{iteration}")
         output.append("0;JMP")
 
-        output.append("(EVALUATE)")
+        output.append(f"(EVALUATE_{iteration})")
         output.append("@0")
         output.append("D=!A")
         output.append("@SP")
         output.append("A=M")
         output.append("M=D")
 
-        output.append("(INCREMENT)")
+        output.append(f"(INCREMENT_{iteration})")
         output.append("@SP")
         output.append("M=M+1")
 
-def parsePushPop(args, output):
-    return
+def parsePushPop(args, output, filename):
+    standard = {
+        "local": "LCL",
+        "argument": "ARG",
+        "this": "THIS",
+        "that": "THAT",
+    }
+    if args[0] == "push":
+        if args[1] in standard.keys():
+            output.append(f"@{args[2]}")
+            output.append("D=A")
+            output.append(f"@{args[1]}")
+            output.append("A=M+D")
+            output.append("D=M")
+        else:
+            if args[1] == "constant":
+                output.append(f"@{args[2]}")
+            if args[1] == "static":
+                output.append(f"@{filename}.{args[2]}")
+            if args[1] == "temp":
+                output.append(f"@{5 + args[2]}")
+            if args[1] == "pointer":
+                if args[2] == 0:
+                    output.append(f"@{3}")
+                else:
+                    output.append(f"@{4}")
+                output.append("A=M")
+        output.append("D=A")
+        output.append("@SP")
+        output.append("A=M")
+        output.append("M=D")
+        output.append("@SP")
+        output.append("M=M+1")
+    else:
 
 
-def parseLine(line ,output):
+def parseLine(line, output, filename):
     args = line.split(" ")
     if len(args) == 1:
-        # add, sub, neg, eq, gt, lt, and, or, not
-        # "ng" and "not" only change the recent elements
         parseOperations(args[0], output)
     else:
-        # push, pop
-        # args[0] -> push/pop
-        # args[1] -> memory segment
-        # args[2] -> memory segment's index
-        # ex) push local 2 => @LCL + 2
-        # ex) push constant 42 => @42
-        # ex) push argument 1 => @ARG + 1
-        parsePushPop(args, output)
+        parsePushPop(args, output, filename)
 
 
 def parseFile():
@@ -95,7 +118,7 @@ def parseFile():
     for line in file:
         stripped_line = line.strip()
         if stripped_line and not stripped_line.startswith("//"):
-            parseLine(line, output)
+            parseLine(line, output, file_name)
 
     printOutput(output, file_name)
 
