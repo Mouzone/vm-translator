@@ -65,6 +65,8 @@ def parseOperations(operation, output):
         output.append("@SP")
         output.append("M=M+1")
 
+    output.append("\n")
+
 
 def parsePushPop(args, output, filename):
     standard = {
@@ -80,20 +82,21 @@ def parsePushPop(args, output, filename):
             output.append(f"@{args[1]}")
             output.append("A=M+D")
             output.append("D=M")
+        elif args[1] == "constant":
+            output.append(f"@{args[2]}")
         else:
-            if args[1] == "constant":
-                output.append(f"@{args[2]}")
             if args[1] == "static":
                 output.append(f"@{filename}.{args[2]}")
             if args[1] == "temp":
-                output.append(f"@{5 + args[2]}")
+                output.append(f"@{5 + int(args[2])}")
             if args[1] == "pointer":
                 if args[2] == 0:
                     output.append(f"@{3}")
                 else:
                     output.append(f"@{4}")
-                output.append("A=M")
-        output.append("D=A")
+            output.append("A=M")
+            output.append("D=A")
+
         output.append("@SP")
         output.append("A=M")
         output.append("M=D")
@@ -107,9 +110,9 @@ def parsePushPop(args, output, filename):
         output.append("@R0")
         output.append("M=D")
         if args[1] in standard.keys():
-            output.append(f"{args[2]}")
+            output.append(f"@{args[2]}")
             output.append("D=A")
-            output.append(f"{args[1]}")
+            output.append(f"@{args[1]}")
             output.append("A=M+D")
             output.append("D=A")
             output.append("@R1")
@@ -136,6 +139,14 @@ def parsePushPop(args, output, filename):
             output.append(f"@{filename}.{args[2]}")
             output.append(f"M=D")
 
+        if args[1] == "temp":
+            output.append("@R0")
+            output.append("D=M")
+            output.append(f"@{5 + int(args[2])}")
+            output.append(f"M=D")
+
+    output.append("\n")
+
 
 def parseLine(line, output, filename):
     args = line.split(" ")
@@ -160,7 +171,12 @@ def parseFile():
 
 
 def printOutput(output, file_name):
-    return
+    file_path = f"output files/{file_name}.asm"
+    file = open(file_path, "w")
+    for line in output:
+        file.write(line)
+        if "\n" not in line:
+            file.write("\n")
 
 
 parseFile()
