@@ -24,7 +24,7 @@ def parseOperations(operation, output):
         output.append("A=M")
         output.append("D=M")
         output.append("@SP")
-        output.append("A=M")
+        output.append("A=M-1")
         output.append(f"A=M${two_argument_functions[operation]}D")
 
     if operation in one_argument_functions.keys():
@@ -42,7 +42,7 @@ def parseOperations(operation, output):
         output.append("@SP")
         output.append("M=M-1")
         output.append("A=M")
-        output.append("D=M")
+        output.append("D=M-D")
         output.append(f"@evaluate_{iteration}")
         output.append(f"D;{jump_functions[operation]}")
 
@@ -64,6 +64,7 @@ def parseOperations(operation, output):
         output.append(f"(INCREMENT_{iteration})")
         output.append("@SP")
         output.append("M=M+1")
+
 
 def parsePushPop(args, output, filename):
     standard = {
