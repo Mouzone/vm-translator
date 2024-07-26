@@ -84,6 +84,7 @@ def parsePushPop(args, output, filename):
             output.append("D=M")
         elif args[1] == "constant":
             output.append(f"@{args[2]}")
+            output.append("D=A")
         else:
             if args[1] == "static":
                 output.append(f"@{filename}.{args[2]}")
@@ -165,7 +166,7 @@ def parseFile():
     for line in file:
         stripped_line = line.strip()
         if stripped_line and not stripped_line.startswith("//"):
-            parseLine(line, output, file_name)
+            parseLine(stripped_line, output, file_name)
 
     printOutput(output, file_name)
 

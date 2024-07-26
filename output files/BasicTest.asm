@@ -184,7 +184,6 @@ D=A
 @local
 A=M+D
 D=M
-D=A
 @SP
 A=M
 M=D
@@ -196,33 +195,44 @@ D=A
 @that
 A=M+D
 D=M
-D=A
 @SP
 A=M
 M=D
 @SP
 M=M+1
 
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+A=M$+D
 
 @1
 D=A
 @argument
 A=M+D
 D=M
-D=A
 @SP
 A=M
 M=D
 @SP
 M=M+1
 
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+A=M$-D
 
 @6
 D=A
 @this
 A=M+D
 D=M
-D=A
 @SP
 A=M
 M=D
@@ -234,16 +244,30 @@ D=A
 @this
 A=M+D
 D=M
-D=A
 @SP
 A=M
 M=D
 @SP
 M=M+1
 
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+A=M$+D
 
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+A=M$-D
 
 @11
+A=M
 D=A
 @SP
 A=M
@@ -251,4 +275,11 @@ M=D
 @SP
 M=M+1
 
+@SP
+M=M-1
+A=M
+D=M
+@SP
+A=M-1
+A=M$+D
 
