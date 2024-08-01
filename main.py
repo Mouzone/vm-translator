@@ -18,6 +18,7 @@ def parseOperations(operation, output):
         "lt": "JLT",
     }
 
+    # todo: rewrite operations to use onl D ? M
     if operation in two_argument_functions.keys():
         output.append("@SP")
         output.append("M=M-1")
@@ -25,7 +26,7 @@ def parseOperations(operation, output):
         output.append("D=M")
         output.append("@SP")
         output.append("A=M-1")
-        output.append(f"A=M${two_argument_functions[operation]}D")
+        output.append(f"A=D{two_argument_functions[operation]}M")
 
     if operation in one_argument_functions.keys():
         output.append("@SP")
@@ -79,7 +80,7 @@ def parsePushPop(args, output, filename):
         if args[1] in standard.keys():
             output.append(f"@{args[2]}")
             output.append("D=A")
-            output.append(f"@{args[1]}")
+            output.append(f"@{standard[args[1]]}")
             output.append("A=M+D")
             output.append("D=M")
         elif args[1] == "constant":
@@ -113,7 +114,7 @@ def parsePushPop(args, output, filename):
         if args[1] in standard.keys():
             output.append(f"@{args[2]}")
             output.append("D=A")
-            output.append(f"@{args[1]}")
+            output.append(f"@{standard[args[1]]}")
             output.append("A=M+D")
             output.append("D=A")
             output.append("@R1")
